@@ -7,7 +7,15 @@
 
 enum animState {NONE,FORWARD,TURN};
 
-void checkTurn(Camera3D *camera,float targetTime, float *currentTime,enum animState *animState,float *oldAngle,bool gauche, float *rotateSum);
-void checkForward(Camera3D *camera,float targetTime, float *currentTime,enum animState *animState,float *oldPosition, float *positionSum);
+typedef struct{
+	Camera3D *camera;
+	float targetTime;
+	float currentTime;
+	float oldValue;
+	float sum;
+}AnimData;
+
+void checkTurn(AnimData *animData,enum animState *animState,bool gauche);
+void checkForward(AnimData *animData,enum animState *animState);
 
 #endif

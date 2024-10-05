@@ -1,69 +1,66 @@
 #include "raylib.h"
 #include "raymath.h"
 #include "rcamera.h"
+#include "stddef.h"
 
 #include "player_control.h"
 
-void checkTurn(Camera3D *camera,float targetTime, float *currentTime,enum animState *animState,float *oldAngle,bool gauche, float *rotateSum){
-    if(*currentTime<targetTime){
+void checkTurn(AnimData *animData,enum animState *animState,bool gauche){
+    if(animData->currentTime < animData->targetTime){
         *animState = TURN;
 
-        *currentTime = *currentTime+GetFrameTime();
+        animData->currentTime +=GetFrameTime();
 
-        //Percentage of anim completion
-        float t = *currentTime / targetTime;
+        float t = animData->currentTime / animData->targetTime;
 
-        //Turn anim
-        //Calculation of the next angle of rotation
         float newAngle = Lerp(0,TURN_ANGLE,t);
-        float deltaAngle = newAngle - *oldAngle;
-        *oldAngle = newAngle;
-        CameraYaw(camera,deltaAngle * (gauche ? 1 : -1),false);
+        float deltaAngle = newAngle - animData->oldValue;
+        animData->oldValue = newAngle;
+        CameraYaw(animData->camera,deltaAngle * (gauche ? 1 : -1),false);
         
-        *rotateSum = *rotateSum + deltaAngle;
+        animData->sum += deltaAngle;
 
         //End of animation
-        if(*currentTime>=targetTime){
-            CameraYaw(camera,(TURN_ANGLE - *rotateSum) * (gauche ? 1 : -1),false);
-            camera->target.x=roundf(camera->target.x);
-            camera->target.y=roundf(camera->target.y);
-            camera->target.z=roundf(camera->target.z);
+        if(animData->currentTime>=animData->targetTime){
+            CameraYaw(animData->camera,(TURN_ANGLE - animData->sum) * (gauche ? 1 : -1),false);
+            animData->camera->target.x=roundf(animData->camera->target.x);
+            animData->camera->target.y=roundf(animData->camera->target.y);
+            animData->camera->target.z=roundf(animData->camera->target.z);
         }    
         
     }else if(*animState == TURN){
-        *oldAngle=0;
-        *rotateSum = 0;
+        animData->oldValue=0;
+        animData->sum = 0;
 
         *animState = NONE;
     }
 }
-void checkForward(Camera3D *camera,float targetTime, float *currentTime,enum animState* animState,float *oldPosition, float *positionSum){
-    if(*currentTime < targetTime){
+void checkForward(AnimData *animData,enum animState *animState){
+
+    if(animData->currentTime < animData->targetTime){
         *animState = FORWARD;
 
-        *currentTime = *currentTime+GetFrameTime();
+        animData->currentTime += GetFrameTime();
 
-        //Percentage of anim completion
-        float t = *currentTime / targetTime;
+        float t = animData->currentTime / animData->targetTime;
         float newCoord = Lerp(0,PLAYER_MOVE_RANGE,t);
-        float deltaCoord = newCoord - *oldPosition;
-        *oldPosition = newCoord;
+        float deltaCoord = newCoord - animData->oldValue;
+        animData->oldValue = newCoord;
+        CameraMoveForward(animData->camera,deltaCoord,false);
 
-        *positionSum = *positionSum + deltaCoord;
-
-        CameraMoveForward(camera,deltaCoord,false);
+        animData->sum += deltaCoord;
         
         //End of animation
-        if(*currentTime>=targetTime){
-            CameraMoveForward(camera,(PLAYER_MOVE_RANGE - *positionSum),false);
-            camera->position.x=roundf(camera->position.x);
-            camera->position.y=roundf(camera->position.y);
-            camera->position.z=roundf(camera->position.z);
+        if(animData->currentTime>=animData->targetTime){
+            CameraMoveForward(animData->camera,(PLAYER_MOVE_RANGE - animData->sum),false);
+            animData->camera->position.x=roundf(animData->camera->position.x);
+            animData->camera->position.y=roundf(animData->camera->position.y);
+            animData->camera->position.z=roundf(animData->camera->position.z);
         } 
     }
     else if(*animState == FORWARD){
-        *oldPosition = 0;
-        *positionSum = 0;
+        animData->oldValue = 0;
+        animData->sum = 0;
 
         *animState = NONE;
     }

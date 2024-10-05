@@ -1,9 +1,8 @@
 #include "raylib.h"
 #include "rcamera.h"
 #include "raymath.h"
-#include "math.h"
 #include "player_control.h"
-#include "stdio.h"
+#include "stddef.h"
 
 #define MAP_SIZE_X 5
 #define MAP_SIZE_Y 5
@@ -18,11 +17,6 @@ int main(void)
     //--------------------------------------------------------------------------------------
     const int screenWidth = 960;
     const int screenHeight = 540;
-
-    typedef struct{
-
-    }AnimData;
-
 
     InitWindow(screenWidth, screenHeight, "Dungeon");
 
@@ -64,6 +58,20 @@ int main(void)
                                        {0,1,1,1,1},
                                        {0,0,1,0,0}};
     //--------------------------------------------------------------------------------------
+    AnimData turnData;
+    turnData.camera = &camera;
+    turnData.targetTime = turnDuration;
+    turnData.currentTime = timeTurnAnim;
+    turnData.oldValue = oldAngle;
+    turnData.sum = rotateSum;
+
+    AnimData forwardData;
+    forwardData.camera = &camera;
+    forwardData.targetTime = forwardDuration;
+    forwardData.currentTime = timeForwardAnim;
+    forwardData.oldValue = oldCoord;
+    forwardData.sum = coordSum;
+
     DisableCursor();                    // Limit cursor to relative movement inside the window
 
     SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
@@ -86,21 +94,22 @@ int main(void)
         if(IsKeyDown(KEY_UP) && animState == NONE){
             if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
                 if(map[checkX][checkZ] == 1){
-                    timeForwardAnim = 0;
+                    forwardData.currentTime = 0;
                 }
             }
         }
-        if(IsKeyDown(KEY_LEFT) && animState == NONE){
-            timeTurnAnim = 0;
+        else if(IsKeyDown(KEY_LEFT) && animState == NONE){
+            turnData.currentTime = 0;
             gauche = true;
         }
-        if(IsKeyDown(KEY_RIGHT) && animState == NONE){
-            timeTurnAnim = 0;
+        else if(IsKeyDown(KEY_RIGHT) && animState == NONE){
+            turnData.currentTime = 0;
             gauche = false;
         }
 
-        checkForward(&camera,forwardDuration,&timeForwardAnim,&animState,&oldCoord,&coordSum);
-        checkTurn(&camera,turnDuration,&timeTurnAnim,&animState,&oldAngle,gauche,&rotateSum); 
+        checkTurn(&turnData,&animState,gauche); 
+        checkForward(&forwardData,&animState);
+
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -140,6 +149,7 @@ int main(void)
             DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 90, 10, BLACK);
             DrawText(TextFormat("ForwardVector (%06.3f, %06.3f, %06.3f)", GetCameraForward(&camera).x, GetCameraForward(&camera).y, GetCameraForward(&camera).z), 610, 105, 10, BLACK);
             DrawText(TextFormat("checkX %d checkY %d",checkX , checkZ),610 ,120 ,10, BLACK);
+            DrawText(TextFormat("animState %d",animState),610 ,135 ,10, BLACK);
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

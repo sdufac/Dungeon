@@ -53,11 +53,11 @@ int main(void)
 
     //Map
     //--------------------------------------------------------------------------------------
-    int map[MAP_SIZE_X][MAP_SIZE_Y] = {{1,1,1,0,1}, //player position /5 = table index
-                                       {1,0,1,0,1}, // position x=5
-                                       {1,1,1,0,1}, 
-                                       {0,1,1,1,1},
-                                       {0,0,1,0,0}};
+    int map[MAP_SIZE_X][MAP_SIZE_Y] = {{1,1,1,2,1}, //1=floor
+                                       {1,2,1,2,1}, //2=wall
+                                       {1,1,1,2,1}, 
+                                       {2,1,1,1,1},
+                                       {2,2,1,2,2}};
     //--------------------------------------------------------------------------------------
     AnimData turnData;
     turnData.camera = &camera;
@@ -127,7 +127,12 @@ int main(void)
                 for(int i = 0; i< MAP_SIZE_X; i++){
                     for (int j =0; j< MAP_SIZE_Y; j++){
                         if(map[i][j]==1){
-                            DrawPlane((Vector3){ (i*PLAYER_MOVE_RANGE) , 0.0f, (j*PLAYER_MOVE_RANGE) } , (Vector2){4,4}, PINK);
+                            DrawPlane((Vector3){ (i*PLAYER_MOVE_RANGE) , 0.0f, (j*PLAYER_MOVE_RANGE) } , (Vector2){5,5}, PINK);
+                        }
+                        else if(map[i][j]==2){ 
+                            Vector3 wallSize = {PLAYER_MOVE_RANGE , PLAYER_MOVE_RANGE, PLAYER_MOVE_RANGE};
+                            Vector3 wallPosition = {i*PLAYER_MOVE_RANGE, wallSize.y/2, j*PLAYER_MOVE_RANGE};
+                            DrawCubeV(wallPosition,wallSize,GRAY);
                         }
                     }
                 }

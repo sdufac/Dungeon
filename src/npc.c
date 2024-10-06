@@ -20,7 +20,7 @@ Npc* npcInitiate(){
     monoko.name = "Monoko";
     monoko.spritePath = "img/Monoko.png";
     monoko.texture = LoadTexture(monoko.spritePath); 
-    monoko.position = (Vector3){15,((float)monoko.texture.height)/2/100,20};
+    monoko.position = (Vector3){15,1.5f,20};
 
     npcTab[0] = monoko;
 
@@ -28,7 +28,7 @@ Npc* npcInitiate(){
     jelly.name = "Jelly";
     jelly.spritePath = "img/Jelly.png";
     jelly.texture = LoadTexture(jelly.spritePath);
-    jelly.position = (Vector3){20,((float)jelly.texture.height)/2/100,10};
+    jelly.position = (Vector3){20,1.5f,10};
 
     npcTab[1] = jelly; 
     

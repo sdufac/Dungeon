@@ -11,5 +11,6 @@ typedef struct{
 }Npc;
 
 bool isFacingNPC(Npc npc,Vector3 nextPosition);
+Npc* npcInitiate();
 
 #endif

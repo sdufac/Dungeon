@@ -80,15 +80,8 @@ int main(void)
     //NPC
     //--------------------------------------------------------------------------------------
     int npcNumber = 1;
-    Npc npcTab[npcNumber];
+    Npc *npcTab = npcInitiate();
 
-    Npc monoko;
-    monoko.name = "Monoko";
-    monoko.spritePath = "img/Monoko.png";
-    monoko.texture = LoadTexture(monoko.spritePath); 
-    monoko.position = (Vector3){15,((float)monoko.texture.height)/2/100,20};
-
-    npcTab[0]= monoko;
     // Main game loop
     //--------------------------------------------------------------------------------------
     while (!WindowShouldClose())        // Detect window close button or ESC key
@@ -166,7 +159,9 @@ int main(void)
                     DrawCube(camera.target, 0.5f, 0.5f, 0.5f, PURPLE);
                     DrawCubeWires(camera.target, 0.5f, 0.5f, 0.5f, DARKPURPLE);
                 }
-                DrawBillboard(camera,monoko.texture,monoko.position,3.0f,WHITE);
+                for(int i = 0; i<npcNumber; i++){
+                    DrawBillboard(camera,npcTab[i].texture,npcTab[i].position,3.0f,WHITE);
+                }
 
             EndMode3D();
 
@@ -174,7 +169,6 @@ int main(void)
             DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 15, 10, BLACK);
             DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", camera.target.x, camera.target.y, camera.target.z), 610, 30, 10, BLACK);
             DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 45, 10, BLACK);
-            DrawText(TextFormat("Monoko x = %f, y = %f", monoko.position.x, monoko.position.z), 610, 60, 10, BLACK);
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

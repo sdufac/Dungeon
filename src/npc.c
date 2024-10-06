@@ -1,7 +1,11 @@
 #include "npc.h"
 #include "raylib.h"
 
-void initializeNpc(Npc npc, Camera *camera){
-    npc.texture = LoadTexture(npc.spritePath); 
-    npc.toScreenPosition = GetWorldToScreen(npc.position,*camera);
+bool isFacingNPC(Npc npc,Vector3 nextPosition){
+    bool isFacingNpc = false;
+
+    if(npc.position.x == nextPosition.x && npc.position.z == nextPosition.z){
+            isFacingNpc = true; 
+    }
+    return isFacingNpc;
 }

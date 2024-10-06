@@ -401,7 +401,8 @@ endif
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
     src/main.c \
-    src/player_control.c
+    src/player_control.c \
+    src/npc.c
 
 # Define all object files from source files
 OBJS = $(patsubst %.c, %.o, $(PROJECT_SOURCE_FILES))

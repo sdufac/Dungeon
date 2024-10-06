@@ -127,7 +127,11 @@ int main(void)
                 for(int i = 0; i< MAP_SIZE_X; i++){
                     for (int j =0; j< MAP_SIZE_Y; j++){
                         if(map[i][j]==1){
-                            DrawPlane((Vector3){ (i*PLAYER_MOVE_RANGE) , 0.0f, (j*PLAYER_MOVE_RANGE) } , (Vector2){5,5}, PINK);
+                            Vector3 floorPosition = { (i*PLAYER_MOVE_RANGE) , 0.0f, (j*PLAYER_MOVE_RANGE) };
+                            Vector3 ceilingPosition = { (i*PLAYER_MOVE_RANGE) , PLAYER_MOVE_RANGE, (j*PLAYER_MOVE_RANGE) };
+
+                            DrawPlane(floorPosition, (Vector2){PLAYER_MOVE_RANGE,PLAYER_MOVE_RANGE}, PINK);
+                            DrawCubeV(ceilingPosition,(Vector3){PLAYER_MOVE_RANGE,0.1f,PLAYER_MOVE_RANGE},PINK);
                         }
                         else if(map[i][j]==2){ 
                             Vector3 wallSize = {PLAYER_MOVE_RANGE , PLAYER_MOVE_RANGE, PLAYER_MOVE_RANGE};

@@ -2,6 +2,7 @@
 #include "rcamera.h"
 #include "raymath.h"
 #include "player_control.h"
+#include "npc.h"
 #include "stddef.h"
 
 #define MAP_SIZE_X 5
@@ -75,10 +76,13 @@ int main(void)
     DisableCursor();                    // Limit cursor to relative movement inside the window
 
     SetTargetFPS(60);                   // Set our game to run at 60 frames-per-second
+    //NPC
     //--------------------------------------------------------------------------------------
-    
-    
-
+    Npc monoko;
+    monoko.spritePath = "img/Monoko.png";
+    monoko.texture = LoadTexture(monoko.spritePath); 
+    monoko.position = (Vector3){15,((float)monoko.texture.height)/2/100,20};
+    //--------------------------------------------------------------------------------------
     // Main game loop
     while (!WindowShouldClose())        // Detect window close button or ESC key
     {
@@ -86,6 +90,7 @@ int main(void)
         // Some default standard keyboard/mouse inputs are hardcoded to simplify use
         // For advance camera controls, it's reecommended to compute camera movement manually
 
+        monoko.toScreenPosition = GetWorldToScreen(monoko.position, camera);
         //Turn Animation--------------------------------------------------------------------------
         Vector3 nextPosition = Vector3Add(Vector3Scale(GetCameraForward(&camera),PLAYER_MOVE_RANGE),camera.position);
         int checkX = nextPosition.x / PLAYER_MOVE_RANGE;
@@ -133,6 +138,7 @@ int main(void)
                     DrawCube(camera.target, 0.5f, 0.5f, 0.5f, PURPLE);
                     DrawCubeWires(camera.target, 0.5f, 0.5f, 0.5f, DARKPURPLE);
                 }
+                DrawBillboard(camera,monoko.texture,monoko.position,3.0f,WHITE);
 
             EndMode3D();
 
@@ -147,9 +153,7 @@ int main(void)
             DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 60, 10, BLACK);
             DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", camera.target.x, camera.target.y, camera.target.z), 610, 75, 10, BLACK);
             DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 90, 10, BLACK);
-            DrawText(TextFormat("ForwardVector (%06.3f, %06.3f, %06.3f)", GetCameraForward(&camera).x, GetCameraForward(&camera).y, GetCameraForward(&camera).z), 610, 105, 10, BLACK);
-            DrawText(TextFormat("checkX %d checkY %d",checkX , checkZ),610 ,120 ,10, BLACK);
-            DrawText(TextFormat("animState %d",animState),610 ,135 ,10, BLACK);
+            DrawText(TextFormat("Monoko %f", monoko.position.y), 610, 105, 10, BLACK);
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

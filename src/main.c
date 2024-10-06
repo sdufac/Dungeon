@@ -79,7 +79,7 @@ int main(void)
 
     //NPC
     //--------------------------------------------------------------------------------------
-    int npcNumber = 1;
+    int npcNumber = 2;
     Npc *npcTab = npcInitiate();
 
     // Main game loop
@@ -95,7 +95,7 @@ int main(void)
         bool facingNpc =false;
 
         for(int i = 0; i < npcNumber ;i++){
-            if (isFacingNPC(npcTab[npcIndex],nextPosition)){
+            if (isFacingNPC(npcTab[i],nextPosition)){
                 npcIndex = i; 
                 facingNpc = true;
             }

@@ -12,7 +12,7 @@ bool isFacingNPC(Npc npc,Vector3 nextPosition){
 }
 
 Npc* npcInitiate(){
-    int numberOfNpc = 1;
+    int numberOfNpc = 2;
 
     Npc *npcTab = (Npc*)malloc(sizeof(Npc)*numberOfNpc);
 
@@ -24,5 +24,13 @@ Npc* npcInitiate(){
 
     npcTab[0] = monoko;
 
+    Npc jelly;
+    jelly.name = "Jelly";
+    jelly.spritePath = "img/Jelly.png";
+    jelly.texture = LoadTexture(jelly.spritePath);
+    jelly.position = (Vector3){20,((float)jelly.texture.height)/2/100,10};
+
+    npcTab[1] = jelly; 
+    
     return npcTab;
 }

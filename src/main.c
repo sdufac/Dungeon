@@ -16,6 +16,8 @@ int main(void)
 
     // Initialization
     //--------------------------------------------------------------------------------------
+    enum gameState{IN_GAME,IN_MENU};
+    enum gameState gameState = IN_GAME;
     const int screenWidth = 960;
     const int screenHeight = 540;
 
@@ -103,22 +105,25 @@ int main(void)
         
         //Input
         //--------------------------------------------------------------------------------------
-        if(IsKeyDown(KEY_UP) && animState == NONE){
-            if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
-                if(map[checkX][checkZ] == 1){
-                    if(!facingNpc)forwardData.currentTime = 0;
+        if(gameState == IN_GAME){
+            if(IsKeyDown(KEY_UP) && animState == NONE){
+                if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
+                    if(map[checkX][checkZ] == 1){
+                        if(!facingNpc)forwardData.currentTime = 0;
+                    }
                 }
             }
-        }
-        else if(IsKeyDown(KEY_LEFT) && animState == NONE){
-            turnData.currentTime = 0;
-            gauche = true;
-        }
-        else if(IsKeyDown(KEY_RIGHT) && animState == NONE){
-            turnData.currentTime = 0;
-            gauche = false;
-        }
-        else if(IsKeyPressed(KEY_E) && facingNpc){
+            else if(IsKeyDown(KEY_LEFT) && animState == NONE){
+                turnData.currentTime = 0;
+                gauche = true;
+            }
+            else if(IsKeyDown(KEY_RIGHT) && animState == NONE){
+                turnData.currentTime = 0;
+                gauche = false;
+            }
+            else if(IsKeyDown(KEY_E) && facingNpc){
+                //TODO
+            }
         }
         
         
@@ -169,6 +174,12 @@ int main(void)
             DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 15, 10, BLACK);
             DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", camera.target.x, camera.target.y, camera.target.z), 610, 30, 10, BLACK);
             DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 45, 10, BLACK);
+            if(gameState == IN_MENU){
+                Vector2 boxSize = {screenWidth*0.7f,150};
+                Vector2 boxPos = {(screenWidth - boxSize.x)/2,screenHeight-boxSize.y};
+                DrawRectangleGradientV(boxPos.x,boxPos.y,boxSize.x,boxSize.y,VIOLET,BLACK);
+                DrawRectangleLinesEx((Rectangle){boxPos.x,boxPos.y,boxSize.x,boxSize.y}, 5, BLACK);
+            }
         EndDrawing();
         //----------------------------------------------------------------------------------
     }

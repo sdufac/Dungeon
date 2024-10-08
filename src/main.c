@@ -94,22 +94,24 @@ int main(void)
         int checkZ = nextPosition.z / PLAYER_MOVE_RANGE;
 
         int npcIndex;
-        bool facingNpc =false;
+        bool isFacingNpc =false;
+        Npc facingNpc;
 
         for(int i = 0; i < npcNumber ;i++){
             if (isFacingNPC(npcTab[i],nextPosition)){
                 npcIndex = i; 
-                facingNpc = true;
+                facingNpc = npcTab[i];
+                isFacingNpc = true;
             }
         }
         
-        //Input
-        //--------------------------------------------------------------------------------------
         if(gameState == IN_GAME){
+            //Input
+            //--------------------------------------------------------------------------------------
             if(IsKeyDown(KEY_UP) && animState == NONE){
                 if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
                     if(map[checkX][checkZ] == 1){
-                        if(!facingNpc)forwardData.currentTime = 0;
+                        if(!isFacingNpc)forwardData.currentTime = 0;
                     }
                 }
             }
@@ -121,17 +123,20 @@ int main(void)
                 turnData.currentTime = 0;
                 gauche = false;
             }
-            else if(IsKeyDown(KEY_E) && facingNpc){
+            else if(IsKeyDown(KEY_E) && isFacingNpc){
                 //TODO
+                gameState = IN_MENU;
             }
+            
+            //Function calling
+            //--------------------------------------------------------------------------------------
+            checkTurn(&turnData,&animState,gauche); 
+            checkForward(&forwardData,&animState);
         }
-        
-        
-        //Function calling
-        //--------------------------------------------------------------------------------------
-        checkTurn(&turnData,&animState,gauche); 
-        checkForward(&forwardData,&animState);
 
+        if(gameState == IN_MENU){
+            //TODO
+        }
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -179,6 +184,7 @@ int main(void)
                 Vector2 boxPos = {(screenWidth - boxSize.x)/2,screenHeight-boxSize.y};
                 DrawRectangleGradientV(boxPos.x,boxPos.y,boxSize.x,boxSize.y,VIOLET,BLACK);
                 DrawRectangleLinesEx((Rectangle){boxPos.x,boxPos.y,boxSize.x,boxSize.y}, 5, BLACK);
+                DrawText(TextFormat("%s",facingNpc.name),boxPos.x +10,boxPos.y +10,20,WHITE);
             }
         EndDrawing();
         //----------------------------------------------------------------------------------

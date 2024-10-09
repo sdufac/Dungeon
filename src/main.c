@@ -189,6 +189,7 @@ int main(void)
                 DrawRectangleGradientV(boxPos.x,boxPos.y,boxSize.x,boxSize.y,VIOLET,BLACK);
                 DrawRectangleLinesEx((Rectangle){boxPos.x,boxPos.y,boxSize.x,boxSize.y}, 5, BLACK);
                 DrawText(TextFormat("%s",facingNpc.name),boxPos.x +10,boxPos.y +10,20,WHITE);
+                DrawText(TextFormat("%s",facingNpc.testDialogue),boxPos.x +10,boxPos.y +35,15,WHITE);
             }
         EndDrawing();
         //----------------------------------------------------------------------------------

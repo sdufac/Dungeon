@@ -13,10 +13,11 @@ typedef struct{
 	Texture2D texture;
 	Vector3 position;
 	Vector2 toScreenPosition;
-	node_t *heads;
+	char *testDialogue;
 }Npc;
 
 bool isFacingNPC(Npc npc,Vector3 nextPosition);
 Npc* npcInitiate();
+void dialogueParser(Npc *npc);
 
 #endif

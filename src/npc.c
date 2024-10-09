@@ -48,6 +48,7 @@ void dialogueParser(Npc *npc){
 
     char* currentLine = malloc(sizeof(*dialogueFile));
     char* finalLine = malloc(sizeof(*dialogueFile));
+    *finalLine = 0;
 
     fgets(currentLine,100,dialogueFile); 
 
@@ -63,6 +64,7 @@ void dialogueParser(Npc *npc){
             strcat(finalLine,currentLine);
         }
     }
+    free(currentLine);
 
     npc->testDialogue = finalLine;
 }

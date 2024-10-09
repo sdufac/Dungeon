@@ -1,11 +1,11 @@
 Monoko
 {
-	Je ne comprends pas.
-	Ah si c'est bon.
-	LQKJEHFIZEUHFLKJDFSD
+Je ne comprends pas.
+Ah si c'est bon.
+LQKJEHFIZEUHFLKJDFSD
 }
 Jelly
 {
-	Je comprends.
-	En fait non.
+Je comprends.
+En fait non.
 }

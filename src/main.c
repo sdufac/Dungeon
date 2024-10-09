@@ -93,13 +93,13 @@ int main(void)
         int checkX = nextPosition.x / PLAYER_MOVE_RANGE;
         int checkZ = nextPosition.z / PLAYER_MOVE_RANGE;
 
-        int npcIndex;
         bool isFacingNpc =false;
         Npc facingNpc;
 
+        bool stateSwitch = true;
+
         for(int i = 0; i < npcNumber ;i++){
             if (isFacingNPC(npcTab[i],nextPosition)){
-                npcIndex = i; 
                 facingNpc = npcTab[i];
                 isFacingNpc = true;
             }
@@ -108,14 +108,7 @@ int main(void)
         if(gameState == IN_GAME){
             //Input
             //--------------------------------------------------------------------------------------
-            if(IsKeyDown(KEY_UP) && animState == NONE){
-                if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
-                    if(map[checkX][checkZ] == 1){
-                        if(!isFacingNpc)forwardData.currentTime = 0;
-                    }
-                }
-            }
-            else if(IsKeyDown(KEY_LEFT) && animState == NONE){
+            if(IsKeyDown(KEY_LEFT) && animState == NONE){
                 turnData.currentTime = 0;
                 gauche = true;
             }
@@ -123,9 +116,17 @@ int main(void)
                 turnData.currentTime = 0;
                 gauche = false;
             }
-            else if(IsKeyDown(KEY_E) && isFacingNpc){
+            else if(IsKeyDown(KEY_UP) && animState == NONE){
+                if((checkX >= 0 && checkX <=MAP_SIZE_X - 1) && (checkZ >= 0 && checkZ <=MAP_SIZE_Y - 1)){
+                    if(map[checkX][checkZ] == 1){
+                        if(!isFacingNpc)forwardData.currentTime = 0;
+                    }
+                }
+            }
+            else if(IsKeyPressed(KEY_E) && isFacingNpc){
                 //TODO
                 gameState = IN_MENU;
+                stateSwitch = false;
             }
             
             //Function calling
@@ -136,6 +137,9 @@ int main(void)
 
         if(gameState == IN_MENU){
             //TODO
+            if(IsKeyPressed(KEY_E) && stateSwitch == true){
+                gameState = IN_GAME;
+            }
         }
 
         // Draw

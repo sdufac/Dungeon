@@ -17,6 +17,11 @@ Npc* npcInitiate(){
     Npc *npcTab = (Npc*)malloc(sizeof(Npc)*numberOfNpc);
 
     Npc monoko;
+
+    monoko.heads = malloc(sizeof(node_t));
+    monoko.heads->next = NULL; 
+    monoko.heads->dialogue = NULL;
+
     monoko.name = "Monoko";
     monoko.spritePath = "img/Monoko.png";
     monoko.texture = LoadTexture(monoko.spritePath); 
@@ -25,6 +30,11 @@ Npc* npcInitiate(){
     npcTab[0] = monoko;
 
     Npc jelly;
+
+    jelly.heads = malloc(sizeof(node_t));
+    jelly.heads->next = NULL; 
+    jelly.heads->dialogue = NULL;
+
     jelly.name = "Jelly";
     jelly.spritePath = "img/Jelly.png";
     jelly.texture = LoadTexture(jelly.spritePath);

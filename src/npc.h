@@ -4,7 +4,7 @@
 
 typedef struct node{
 	struct node *next;
-	char *dialogue;
+	char *line;
 }node_t;
 
 typedef struct{
@@ -13,11 +13,12 @@ typedef struct{
 	Texture2D texture;
 	Vector3 position;
 	Vector2 toScreenPosition;
-	char *testDialogue;
+	node_t *dialogues;
 }Npc;
 
 bool isFacingNPC(Npc npc,Vector3 nextPosition);
 Npc* npcInitiate();
-void dialogueParser(Npc *npc);
+void dialogueParser(Npc npc);
+void addNode(node_t *head,char *line);
 
 #endif

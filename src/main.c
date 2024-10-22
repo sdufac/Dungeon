@@ -4,6 +4,7 @@
 #include "player_control.h"
 #include "npc.h"
 #include "stddef.h"
+#include "stdlib.h"
 
 #define MAP_SIZE_X 5
 #define MAP_SIZE_Y 5
@@ -16,7 +17,7 @@ int main(void)
 
     // Initialization
     //--------------------------------------------------------------------------------------
-    enum gameState{IN_GAME,IN_MENU};
+    enum gameState{IN_GAME,IN_DIALOGUE};
     enum gameState gameState = IN_GAME;
     const int screenWidth = 960;
     const int screenHeight = 540;
@@ -42,6 +43,10 @@ int main(void)
     const float forwardDuration = 0.3;
     float timeForwardAnim = forwardDuration; float oldCoord = 0;
     float coordSum = 0;
+
+    //Dialogue
+    //--------------------------------------------------------------------------------------
+    node_t *currentDialogue = malloc(sizeof(node_t));
 
     // Define the camera to look into our 3d world (position, target, up vector)
     Camera3D camera = { 0 };
@@ -124,9 +129,17 @@ int main(void)
                 }
             }
             else if(IsKeyPressed(KEY_E) && isFacingNpc){
-                //TODO
-                gameState = IN_MENU;
                 stateSwitch = false;
+                if(facingNpc.dialogues !=NULL){
+                    currentDialogue = facingNpc.dialogues;
+                    gameState = IN_DIALOGUE;
+                }else{
+                    node_t *errorNode;
+                    errorNode->next = NULL;
+                    errorNode->line = "ERREUR";
+                    currentDialogue = errorNode;
+                    gameState = IN_DIALOGUE;
+                }
             }
             
             //Function calling
@@ -135,10 +148,14 @@ int main(void)
             checkForward(&forwardData,&animState);
         }
 
-        if(gameState == IN_MENU){
+        if(gameState == IN_DIALOGUE){
             //TODO
             if(IsKeyPressed(KEY_E) && stateSwitch == true){
-                gameState = IN_GAME;
+                if(currentDialogue->next != NULL){
+                    currentDialogue = currentDialogue->next;
+                }else{
+                    gameState = IN_GAME;
+                }
             }
         }
 
@@ -183,13 +200,13 @@ int main(void)
             DrawText(TextFormat("- Position: (%06.3f, %06.3f, %06.3f)", camera.position.x, camera.position.y, camera.position.z), 610, 15, 10, BLACK);
             DrawText(TextFormat("- Target: (%06.3f, %06.3f, %06.3f)", camera.target.x, camera.target.y, camera.target.z), 610, 30, 10, BLACK);
             DrawText(TextFormat("- Up: (%06.3f, %06.3f, %06.3f)", camera.up.x, camera.up.y, camera.up.z), 610, 45, 10, BLACK);
-            if(gameState == IN_MENU){
+            if(gameState == IN_DIALOGUE){
                 Vector2 boxSize = {screenWidth*0.7f,150};
                 Vector2 boxPos = {(screenWidth - boxSize.x)/2,screenHeight-boxSize.y};
                 DrawRectangleGradientV(boxPos.x,boxPos.y,boxSize.x,boxSize.y,VIOLET,BLACK);
                 DrawRectangleLinesEx((Rectangle){boxPos.x,boxPos.y,boxSize.x,boxSize.y}, 5, BLACK);
                 DrawText(TextFormat("%s",facingNpc.name),boxPos.x +10,boxPos.y +10,20,WHITE);
-                DrawText(TextFormat("%s",facingNpc.testDialogue),boxPos.x +10,boxPos.y +35,15,WHITE);
+                DrawText(TextFormat("%s",currentDialogue->line),boxPos.x +10,boxPos.y +35,15,WHITE);
             }
         EndDrawing();
         //----------------------------------------------------------------------------------

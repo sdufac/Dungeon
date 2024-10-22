@@ -21,50 +21,78 @@ Npc* npcInitiate(){
 
     Npc monoko;
 
-    monoko.name = "Monoko\n";
+    monoko.name = "Monoko";
     monoko.spritePath = "img/Monoko.png";
     monoko.texture = LoadTexture(monoko.spritePath); 
     monoko.position = (Vector3){15,1.5f,20};
-    monoko.testDialogue = NULL;
-    dialogueParser(&monoko);
+    monoko.dialogues = NULL;
+    //dialogueParser(monoko);
+
+    addNode(monoko.dialogues,"TEST");
 
     npcTab[0] = monoko;
 
     Npc jelly;
 
-    jelly.name = "Jelly\n";
+    jelly.name = "Jelly";
     jelly.spritePath = "img/Jelly.png";
     jelly.texture = LoadTexture(jelly.spritePath);
     jelly.position = (Vector3){20,1.5f,10};
-    jelly.testDialogue = NULL;
-    dialogueParser(&jelly);
+    jelly.dialogues = NULL;
+    //dialogueParser(jelly);
+
+    addNode(jelly.dialogues,"TEST");
 
     npcTab[1] = jelly; 
-    
+
     return npcTab;
 }
-void dialogueParser(Npc *npc){
-    FILE *dialogueFile = fopen("data/dialogue/dialogue.txt","rb"); 
-
-    char* currentLine = malloc(sizeof(*dialogueFile));
-    char* finalLine = malloc(sizeof(*dialogueFile));
+void dialogueParser(Npc npc){
+    char* currentLine = malloc(sizeof(char)*200);
+    char* finalLine = malloc(sizeof(char)*2000);
     *finalLine = 0;
+    char path[100] = {0};
 
-    fgets(currentLine,100,dialogueFile); 
+    strcpy(path,"data/dialogue/");
+    strcat(path,npc.name); 
 
-    while(strcmp(currentLine,npc->name) !=0){
-        fgets(currentLine,100,dialogueFile); 
-    }
+    FILE *dialogueFile = fopen(path,"rb");
 
-    fgets(currentLine,100,dialogueFile); 
+    if(dialogueFile != NULL){
+        fgets(currentLine,200,dialogueFile); 
 
-    while(strcmp(currentLine,"}\n")!=0){
-        fgets(currentLine,100,dialogueFile); 
-        if(strcmp(currentLine,"}\n")!=0){
-            strcat(finalLine,currentLine);
-        }
+        while(!feof(dialogueFile)){
+            if(strcmp(currentLine,"//\n")==0){
+                addNode(npc.dialogues,finalLine);
+                *finalLine = 0;
+                fgets(currentLine,200,dialogueFile); 
+            }else if(feof(dialogueFile)){
+                break;
+            } 
+            else{
+                strcat(finalLine,currentLine);
+                fgets(currentLine,200,dialogueFile); 
+            }
+        } 
+        fclose(dialogueFile);
+        *finalLine = 0;
+        *currentLine = 0;
     }
     free(currentLine);
+}
+void addNode(node_t *head,char *line){
+    node_t *newNode = malloc(sizeof(node_t));
+    newNode->line = line;
+    newNode->next = NULL;
 
-    npc->testDialogue = finalLine;
+    if(head == NULL){
+        head = newNode;
+    }else{
+        node_t *currentNode = head;
+        while(currentNode->next != NULL){
+            currentNode = currentNode -> next;
+        }
+
+        currentNode->next = newNode;
+    }
 }

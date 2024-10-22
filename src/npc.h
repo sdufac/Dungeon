@@ -19,6 +19,6 @@ typedef struct{
 bool isFacingNPC(Npc npc,Vector3 nextPosition);
 Npc* npcInitiate();
 void dialogueParser(Npc npc);
-void addNode(node_t *head,char *line);
+void addNode(node_t **head,char *line);
 
 #endif

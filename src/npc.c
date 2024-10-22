@@ -26,9 +26,9 @@ Npc* npcInitiate(){
     monoko.texture = LoadTexture(monoko.spritePath); 
     monoko.position = (Vector3){15,1.5f,20};
     monoko.dialogues = NULL;
-    //dialogueParser(monoko);
+    dialogueParser(monoko);
 
-    addNode(monoko.dialogues,"TEST");
+    //addNode(&monoko.dialogues,"TEST");
 
     npcTab[0] = monoko;
 
@@ -39,9 +39,9 @@ Npc* npcInitiate(){
     jelly.texture = LoadTexture(jelly.spritePath);
     jelly.position = (Vector3){20,1.5f,10};
     jelly.dialogues = NULL;
-    //dialogueParser(jelly);
+    dialogueParser(jelly);
 
-    addNode(jelly.dialogues,"TEST");
+    //addNode(&jelly.dialogues,"TEST");
 
     npcTab[1] = jelly; 
 
@@ -63,10 +63,11 @@ void dialogueParser(Npc npc){
 
         while(!feof(dialogueFile)){
             if(strcmp(currentLine,"//\n")==0){
-                addNode(npc.dialogues,finalLine);
+                addNode(&npc.dialogues,finalLine);
                 *finalLine = 0;
                 fgets(currentLine,200,dialogueFile); 
             }else if(feof(dialogueFile)){
+                addNode(&npc.dialogues,finalLine);
                 break;
             } 
             else{
@@ -80,15 +81,15 @@ void dialogueParser(Npc npc){
     }
     free(currentLine);
 }
-void addNode(node_t *head,char *line){
+void addNode(node_t **head,char *line){
     node_t *newNode = malloc(sizeof(node_t));
     newNode->line = line;
     newNode->next = NULL;
 
-    if(head == NULL){
-        head = newNode;
+    if(*head == NULL){
+        *head = newNode;
     }else{
-        node_t *currentNode = head;
+        node_t *currentNode = *head;
         while(currentNode->next != NULL){
             currentNode = currentNode -> next;
         }

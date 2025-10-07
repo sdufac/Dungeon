@@ -39,7 +39,7 @@ Npc* npcInitiate(){
     jelly.texture = LoadTexture(jelly.spritePath);
     jelly.position = (Vector3){20,1.5f,10};
     jelly.dialogues = NULL;
-    dialogueParser(&jelly,1);
+    dialogueParser(&jelly,2);
 
     npcTab[1] = jelly; 
 
@@ -83,8 +83,6 @@ void dialogueParser(Npc *npc,int index){
 			exit(1);
 		}
 
-		printf("a la on y bien DEBUT APRES CONDITION\n");
-
 		char* dialogueLine = malloc(maxLineSize);
 		dialogueLine[0] = '\0';
 
@@ -93,7 +91,6 @@ void dialogueParser(Npc *npc,int index){
 			strcat(dialogueLine,currentLine);
 
 			fgets(currentLine,200,dialogueFile);
-			printf("trois fois normalement\n");
 		}
 
 		addNode(&npc->dialogues,dialogueLine);
@@ -102,7 +99,6 @@ void dialogueParser(Npc *npc,int index){
 		if(currentLine[0] == ']'){
 			endOfDialoguePart = true;
 		}
-		printf("a la on y bien FIN\n");
 	}
 	fclose(dialogueFile);
 }
